@@ -79,6 +79,7 @@ type Table struct {
 	columnsParams  []string
 	footerParams   []string
 	columnsAlign   []int
+	rowLineIdxs    map[int]int
 }
 
 // Start New Table
@@ -114,7 +115,9 @@ func NewWriter(writer io.Writer) *Table {
 		headerParams:  []string{},
 		columnsParams: []string{},
 		footerParams:  []string{},
-		columnsAlign:  []int{}}
+		columnsAlign:  []int{},
+		rowLineIdxs:   make(map[int]int),
+        }
 	return t
 }
 
@@ -272,6 +275,11 @@ func (t *Table) SetBorder(border bool) {
 
 func (t *Table) SetBorders(border Border) {
 	t.borders = border
+}
+
+// Append a separator after the current line
+func (t *Table) AppendRowLine() {
+    t.rowLineIdxs[len(t.lines)-1]++
 }
 
 // Append row to table
@@ -671,6 +679,12 @@ func (t *Table) printRow(columns [][]string, rowIdx int) {
 
 	if t.rowLine {
 		t.printLine(true)
+	}
+
+	// Any manually added row lines?
+	for t.rowLineIdxs[rowIdx] > 0 {
+		t.printLine(true)
+                t.rowLineIdxs[rowIdx]--
 	}
 }
 
