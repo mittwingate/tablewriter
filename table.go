@@ -684,7 +684,7 @@ func (t *Table) printRow(columns [][]string, rowIdx int) {
 	// Any manually added row lines?
 	for t.rowLineIdxs[rowIdx] > 0 {
 		t.printLine(true)
-                t.rowLineIdxs[rowIdx]--
+		t.rowLineIdxs[rowIdx]--
 	}
 }
 
